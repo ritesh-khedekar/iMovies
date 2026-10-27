@@ -10,6 +10,7 @@ import EmptyState from '../components/ui/EmptyState';
 const Home = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
   const [search, setSearch] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('All');
   const [selectedLanguage, setSelectedLanguage] = useState('All');
@@ -23,16 +24,20 @@ const Home = () => {
   const fetchMovies = async () => {
     try {
       setLoading(true);
+      setFetchError(null);
       const params = {};
       if (selectedGenre !== 'All') params.genre = selectedGenre;
       if (selectedLanguage !== 'All') params.language = selectedLanguage;
 
       const res = await API.get('/movies', { params });
-      if (res.data.success) {
+      if (res.data?.success && Array.isArray(res.data.data)) {
         setMovies(res.data.data);
+      } else if (Array.isArray(res.data)) {
+        setMovies(res.data);
       }
     } catch (err) {
       console.error('Failed to fetch movies:', err);
+      setFetchError(err.response?.data?.message || err.message || 'Cannot connect to movie server');
     } finally {
       setLoading(false);
     }
@@ -381,8 +386,15 @@ const Home = () => {
 
       {/* ================= 3. MOVIE SECTIONS ================= */}
       <div className="container">
-        {/* Loading Skeletons */}
-        {loading ? (
+        {fetchError ? (
+          <EmptyState
+            icon={<FiFilm size={36} />}
+            title="Unable to load movies"
+            description={`Could not reach the movie catalog (${fetchError}). Please verify the backend is running on port 5000.`}
+            actionText="Retry Loading Movies"
+            onAction={fetchMovies}
+          />
+        ) : loading ? (
           <div
             style={{
               display: 'grid',
