@@ -2,7 +2,18 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import API from '../services/api';
 import { mockMovies } from '../services/mockData';
-import { FiStar, FiSearch, FiFilm, FiCalendar, FiClock, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import {
+  FiStar,
+  FiSearch,
+  FiFilm,
+  FiClock,
+  FiChevronLeft,
+  FiChevronRight,
+  FiPlay,
+  FiTrendingUp,
+  FiAward,
+  FiCalendar,
+} from 'react-icons/fi';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import Skeleton from '../components/ui/Skeleton';
@@ -74,7 +85,8 @@ const Home = () => {
       list = list.filter(
         (m) =>
           m.title.toLowerCase().includes(q) ||
-          m.genre.some((g) => g.toLowerCase().includes(q))
+          m.genre.some((g) => g.toLowerCase().includes(q)) ||
+          m.description.toLowerCase().includes(q)
       );
     }
 
@@ -89,22 +101,22 @@ const Home = () => {
     return list;
   }, [movies, search, sortBy]);
 
-  // Top Rated for Hero Billboard
+  // Section 1: Featured for Carousel
   const featuredMovies = useMemo(() => {
-    return [...movies].sort((a, b) => b.rating - a.rating).slice(0, 4);
-  }, [movies]);
+    return filteredMovies.filter((m) => m.rating >= 8.5).slice(0, 5);
+  }, [filteredMovies]);
 
-  // Section 1: Now Showing
+  // Section 2: Now Showing
   const nowShowing = useMemo(() => {
     return filteredMovies.slice(0, 8);
   }, [filteredMovies]);
 
-  // Section 2: Top Rated
+  // Section 3: Top Rated
   const topRated = useMemo(() => {
     return [...movies].sort((a, b) => b.rating - a.rating).slice(0, 6);
   }, [movies]);
 
-  // Section 3: Coming Soon / Spotlight
+  // Section 4: Coming Soon / Spotlight
   const comingSoon = useMemo(() => {
     return [...movies].sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)).slice(0, 6);
   }, [movies]);
@@ -142,27 +154,40 @@ const Home = () => {
   const currentHero = featuredMovies[activeSlide] || null;
 
   return (
-    <div style={{ backgroundColor: 'var(--bg-main)', paddingBottom: '64px' }}>
+    <div style={{ backgroundColor: 'var(--bg-main)', paddingBottom: '80px', minHeight: '100vh' }}>
       {/* ================= 1. HERO CAROUSEL ================= */}
       {currentHero && (
         <section
           style={{
             position: 'relative',
-            backgroundColor: 'var(--bg-surface)',
-            borderBottom: '1px solid var(--border-color)',
+            minHeight: '520px',
+            backgroundColor: '#090B10',
             overflow: 'hidden',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           }}
         >
-          {/* Subtle Ambient Wallpaper */}
+          {/* Ambient Poster Backdrop with Cinematic Gradients */}
           <div
             style={{
               position: 'absolute',
               inset: 0,
               backgroundImage: `url(${currentHero.posterUrl})`,
               backgroundSize: 'cover',
-              backgroundPosition: 'center 20%',
-              opacity: 0.18,
-              filter: 'blur(10px)',
+              backgroundPosition: 'center 25%',
+              opacity: 0.28,
+              filter: 'blur(16px)',
+              transform: 'scale(1.08)',
+              transition: 'all 0.8s ease',
+            }}
+          />
+
+          {/* Vignette & Spotlight Overlays */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background:
+                'linear-gradient(to top, #0B0D14 0%, rgba(11, 13, 20, 0.85) 45%, rgba(11, 13, 20, 0.5) 100%), linear-gradient(to right, #0B0D14 20%, rgba(11, 13, 20, 0.75) 55%, transparent 100%)',
             }}
           />
 
@@ -170,63 +195,133 @@ const Home = () => {
             className="container"
             style={{
               position: 'relative',
-              zIndex: 1,
-              paddingTop: '64px',
-              paddingBottom: '64px',
-              minHeight: '480px',
+              zIndex: 2,
+              paddingTop: '72px',
+              paddingBottom: '72px',
+              minHeight: '520px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
             }}
           >
             <div style={{ maxWidth: '680px' }}>
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                <Badge variant="accent">Featured Premiere</Badge>
-                <Badge variant="neutral" icon={<FiStar style={{ color: 'var(--accent)' }} />}>
-                  {currentHero.rating.toFixed(1)} / 10
-                </Badge>
+              {/* Badges Bar */}
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  gap: '10px',
+                  marginBottom: '18px',
+                }}
+              >
+                <Badge variant="accent">Exclusive Premiere</Badge>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    padding: '4px 10px',
+                    borderRadius: '100px',
+                    background: 'rgba(255, 184, 0, 0.15)',
+                    border: '1px solid rgba(255, 184, 0, 0.4)',
+                    color: '#FCD34D',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                  }}
+                >
+                  <FiStar size={13} style={{ fill: '#FCD34D' }} />
+                  <span>{currentHero.rating.toFixed(1)} / 10</span>
+                </div>
                 <Badge variant="neutral">{currentHero.language}</Badge>
-                <span style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
-                  {Math.floor(currentHero.duration / 60)}h {currentHero.duration % 60}m
+                <span
+                  style={{
+                    fontSize: '13px',
+                    color: 'var(--text-secondary)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                  }}
+                >
+                  <FiClock size={14} />
+                  <span>
+                    {Math.floor(currentHero.duration / 60)}h {currentHero.duration % 60}m
+                  </span>
                 </span>
               </div>
 
-              <h1 style={{ fontSize: '32px', fontWeight: 800, marginBottom: '16px' }}>
+              {/* Title */}
+              <h1
+                style={{
+                  fontSize: '44px',
+                  fontWeight: 900,
+                  lineHeight: 1.1,
+                  marginBottom: '16px',
+                  letterSpacing: '-0.03em',
+                  fontFamily: "'Outfit', sans-serif",
+                }}
+              >
                 {currentHero.title}
               </h1>
 
+              {/* Description */}
               <p
                 style={{
-                  color: 'var(--text-secondary)',
+                  color: '#CBD5E1',
                   fontSize: '16px',
-                  lineHeight: 1.6,
+                  lineHeight: 1.65,
                   marginBottom: '24px',
                   display: '-webkit-box',
                   WebkitLineClamp: 3,
                   WebkitBoxOrient: 'vertical',
                   overflow: 'hidden',
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
                 }}
               >
                 {currentHero.description}
               </p>
 
+              {/* Genre Badges */}
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
                 {currentHero.genre.map((g) => (
-                  <Badge key={g} variant="neutral">
+                  <span
+                    key={g}
+                    style={{
+                      padding: '4px 12px',
+                      borderRadius: '8px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      backdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      color: 'var(--text-secondary)',
+                    }}
+                  >
                     {g}
-                  </Badge>
+                  </span>
                 ))}
               </div>
 
-              <div style={{ display: 'flex', gap: '12px' }}>
+              {/* CTAs */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px' }}>
                 <Link to={`/movies/${currentHero._id}`}>
-                  <Button variant="primary" size="lg" icon={<FiFilm />}>
-                    Book Tickets
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    icon={<FiFilm size={18} />}
+                    style={{ borderRadius: '14px', padding: '14px 28px' }}
+                  >
+                    Book Tickets Now
                   </Button>
                 </Link>
                 {currentHero.trailerUrl && (
                   <Link to={`/movies/${currentHero._id}?trailer=1`}>
-                    <Button variant="outline" size="lg">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      icon={<FiPlay size={18} />}
+                      style={{ borderRadius: '14px', padding: '14px 24px' }}
+                    >
                       Watch Trailer
                     </Button>
                   </Link>
@@ -238,11 +333,11 @@ const Home = () => {
             <div
               style={{
                 position: 'absolute',
-                bottom: '24px',
+                bottom: '32px',
                 right: '24px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px',
+                gap: '10px',
               }}
             >
               <button
@@ -251,25 +346,46 @@ const Home = () => {
                   setActiveSlide((prev) => (prev === 0 ? featuredMovies.length - 1 : prev - 1))
                 }
                 style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '8px',
-                  backgroundColor: 'var(--bg-surface-alt)',
-                  border: '1px solid var(--border-color)',
-                  color: 'var(--text-primary)',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '12px',
+                  backgroundColor: 'rgba(23, 29, 46, 0.8)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  color: '#FFFFFF',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  transition: 'all 0.2s ease',
                 }}
                 aria-label="Previous featured movie"
               >
-                <FiChevronLeft size={18} />
+                <FiChevronLeft size={20} />
               </button>
 
-              <span style={{ fontSize: '13px', color: 'var(--text-secondary)', padding: '0 8px' }}>
-                {activeSlide + 1} / {featuredMovies.length}
-              </span>
+              {/* Dots */}
+              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                {featuredMovies.map((_, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setActiveSlide(idx)}
+                    style={{
+                      width: activeSlide === idx ? '24px' : '8px',
+                      height: '8px',
+                      borderRadius: '100px',
+                      backgroundColor:
+                        activeSlide === idx ? 'var(--accent-light)' : 'rgba(255, 255, 255, 0.2)',
+                      border: 'none',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      padding: 0,
+                    }}
+                    aria-label={`Slide ${idx + 1}`}
+                  />
+                ))}
+              </div>
 
               <button
                 type="button"
@@ -277,20 +393,22 @@ const Home = () => {
                   setActiveSlide((prev) => (prev + 1) % featuredMovies.length)
                 }
                 style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '8px',
-                  backgroundColor: 'var(--bg-surface-alt)',
-                  border: '1px solid var(--border-color)',
-                  color: 'var(--text-primary)',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '12px',
+                  backgroundColor: 'rgba(23, 29, 46, 0.8)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  color: '#FFFFFF',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  transition: 'all 0.2s ease',
                 }}
                 aria-label="Next featured movie"
               >
-                <FiChevronRight size={18} />
+                <FiChevronRight size={20} />
               </button>
             </div>
           </div>
@@ -298,41 +416,44 @@ const Home = () => {
       )}
 
       {/* ================= 2. FILTER & SEARCH BAR ================= */}
-      <section className="container" style={{ marginTop: '32px', marginBottom: '32px' }}>
+      <section className="container" style={{ marginTop: '40px', marginBottom: '40px' }}>
         <div
           style={{
-            backgroundColor: 'var(--bg-surface)',
-            border: '1px solid var(--border-color)',
-            borderRadius: '12px',
-            padding: '16px 20px',
+            backgroundColor: 'rgba(19, 23, 36, 0.75)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '20px',
+            padding: '20px 24px',
             display: 'flex',
             flexWrap: 'wrap',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '16px',
+            gap: '18px',
+            boxShadow: '0 12px 32px rgba(0, 0, 0, 0.4)',
           }}
         >
           {/* Search Box */}
-          <div style={{ position: 'relative', flex: '1 1 280px', minWidth: '240px' }}>
+          <div style={{ position: 'relative', flex: '1 1 300px', minWidth: '240px' }}>
             <span
               style={{
                 position: 'absolute',
-                left: '12px',
+                left: '14px',
                 top: '50%',
                 transform: 'translateY(-50%)',
-                color: 'var(--text-secondary)',
+                color: 'var(--text-tertiary)',
                 display: 'flex',
               }}
             >
-              <FiSearch size={16} />
+              <FiSearch size={18} />
             </span>
             <input
               type="text"
-              placeholder="Search movies by title or genre..."
+              placeholder="Search movies by title, genre, or keywords..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="ui-input"
-              style={{ paddingLeft: '38px', height: '40px' }}
+              style={{ paddingLeft: '42px', height: '44px', borderRadius: '12px' }}
             />
           </div>
 
@@ -342,29 +463,48 @@ const Home = () => {
               value={selectedLanguage}
               onChange={(e) => setSelectedLanguage(e.target.value)}
               className="ui-input"
-              style={{ width: 'auto', height: '40px', padding: '0 12px' }}
+              style={{
+                width: 'auto',
+                height: '44px',
+                padding: '0 14px',
+                borderRadius: '12px',
+                cursor: 'pointer',
+              }}
             >
               <option value="All">All Languages</option>
-              {languages.filter((l) => l !== 'All').map((lang) => (
-                <option key={lang} value={lang}>
-                  {lang}
-                </option>
-              ))}
+              {languages
+                .filter((l) => l !== 'All')
+                .map((lang) => (
+                  <option key={lang} value={lang}>
+                    {lang}
+                  </option>
+                ))}
             </select>
 
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
               className="ui-input"
-              style={{ width: 'auto', height: '40px', padding: '0 12px' }}
+              style={{
+                width: 'auto',
+                height: '44px',
+                padding: '0 14px',
+                borderRadius: '12px',
+                cursor: 'pointer',
+              }}
             >
-              <option value="rating">Sort: Top Rated</option>
-              <option value="releaseDate">Sort: Latest Release</option>
-              <option value="title">Sort: Title (A-Z)</option>
+              <option value="rating">Top Rated Blockbusters</option>
+              <option value="releaseDate">Latest Releases</option>
+              <option value="title">Alphabetical (A-Z)</option>
             </select>
 
             {(search || selectedGenre !== 'All' || selectedLanguage !== 'All') && (
-              <Button variant="outline" size="sm" onClick={resetFilters}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={resetFilters}
+                style={{ borderRadius: '12px', height: '44px', padding: '0 16px' }}
+              >
                 Reset
               </Button>
             )}
@@ -375,9 +515,9 @@ const Home = () => {
         <div
           style={{
             display: 'flex',
-            gap: '8px',
+            gap: '10px',
             overflowX: 'auto',
-            paddingTop: '16px',
+            paddingTop: '18px',
             paddingBottom: '8px',
           }}
         >
@@ -388,18 +528,7 @@ const Home = () => {
                 key={g}
                 type="button"
                 onClick={() => setSelectedGenre(g)}
-                style={{
-                  backgroundColor: active ? 'var(--accent)' : 'var(--bg-surface)',
-                  color: active ? 'var(--text-primary)' : 'var(--text-secondary)',
-                  border: `1px solid ${active ? 'var(--accent)' : 'var(--border-color)'}`,
-                  borderRadius: '100px',
-                  padding: '6px 14px',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  transition: 'background-color 0.2s ease, border-color 0.2s ease',
-                }}
+                className={`ui-filter-pill ${active ? 'active' : ''}`}
               >
                 {g}
               </button>
@@ -412,9 +541,9 @@ const Home = () => {
       <div className="container">
         {fetchError ? (
           <EmptyState
-            icon={<FiFilm size={36} />}
+            icon={<FiFilm size={40} />}
             title="Unable to load movies"
-            description={`Could not reach the movie catalog (${fetchError}). Please verify the backend is running on port 5000.`}
+            description={`Could not reach the movie catalog (${fetchError}). Please verify the backend is running.`}
             actionText="Retry Loading Movies"
             onAction={fetchMovies}
           />
@@ -422,31 +551,31 @@ const Home = () => {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-              gap: '24px',
-              paddingTop: '16px',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))',
+              gap: '28px',
+              paddingTop: '20px',
             }}
           >
             {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
               <div
                 key={n}
                 style={{
-                  backgroundColor: 'var(--bg-surface)',
+                  backgroundColor: 'var(--bg-surface-solid)',
                   border: '1px solid var(--border-color)',
-                  borderRadius: '12px',
-                  padding: '12px',
+                  borderRadius: '16px',
+                  padding: '14px',
                 }}
               >
-                <Skeleton height="280px" borderRadius="8px" style={{ marginBottom: '12px' }} />
-                <Skeleton height="18px" width="80%" style={{ marginBottom: '8px' }} />
-                <Skeleton height="14px" width="50%" style={{ marginBottom: '12px' }} />
-                <Skeleton height="36px" width="100%" />
+                <Skeleton height="320px" borderRadius="12px" style={{ marginBottom: '14px' }} />
+                <Skeleton height="20px" width="75%" style={{ marginBottom: '8px' }} />
+                <Skeleton height="14px" width="45%" style={{ marginBottom: '14px' }} />
+                <Skeleton height="40px" width="100%" borderRadius="10px" />
               </div>
             ))}
           </div>
         ) : filteredMovies.length === 0 ? (
           <EmptyState
-            icon={<FiFilm size={36} />}
+            icon={<FiFilm size={40} />}
             title="No movies found"
             description="We couldn't find any movie matching your current query or filters."
             actionText="Reset All Filters"
@@ -455,31 +584,41 @@ const Home = () => {
         ) : (
           <>
             {/* Section 1: Now Showing */}
-            <div style={{ marginBottom: '48px' }}>
+            <div style={{ marginBottom: '60px' }}>
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  marginBottom: '20px',
+                  marginBottom: '24px',
                 }}
               >
                 <div>
-                  <h2 style={{ fontSize: '24px', fontWeight: 700, margin: 0 }}>Now Showing</h2>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '14px', margin: '4px 0 0 0' }}>
-                    Currently screening in participating cinemas
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <FiTrendingUp style={{ color: 'var(--accent-light)' }} size={22} />
+                    <h2 style={{ fontSize: '26px', fontWeight: 800, margin: 0 }}>Now Showing</h2>
+                  </div>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '14px', margin: '6px 0 0 0' }}>
+                    Currently screening in participating IMAX & Dolby Atmos cinemas
                   </p>
                 </div>
-                <span style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 600 }}>
-                  {filteredMovies.length} Available
+                <span
+                  style={{
+                    fontSize: '13px',
+                    color: 'var(--text-tertiary)',
+                    fontWeight: 700,
+                    letterSpacing: '0.05em',
+                  }}
+                >
+                  {filteredMovies.length} TITLES
                 </span>
               </div>
 
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))',
-                  gap: '24px',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))',
+                  gap: '28px',
                 }}
               >
                 {nowShowing.map((movie) => (
@@ -490,19 +629,24 @@ const Home = () => {
 
             {/* Section 2: Top Rated Blockbusters */}
             {topRated.length > 0 && !search && selectedGenre === 'All' && (
-              <div style={{ marginBottom: '48px' }}>
-                <div style={{ marginBottom: '20px' }}>
-                  <h2 style={{ fontSize: '24px', fontWeight: 700, margin: 0 }}>Top Rated Blockbusters</h2>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '14px', margin: '4px 0 0 0' }}>
-                    Highest rated cinematic experiences voted by viewers
+              <div style={{ marginBottom: '60px' }}>
+                <div style={{ marginBottom: '24px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <FiAward style={{ color: '#FCD34D' }} size={22} />
+                    <h2 style={{ fontSize: '26px', fontWeight: 800, margin: 0 }}>
+                      Top Rated Blockbusters
+                    </h2>
+                  </div>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '14px', margin: '6px 0 0 0' }}>
+                    Highest rated cinematic masterpieces voted by cinema viewers
                   </p>
                 </div>
 
                 <div
                   style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))',
-                    gap: '24px',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))',
+                    gap: '28px',
                   }}
                 >
                   {topRated.map((movie) => (
@@ -515,18 +659,23 @@ const Home = () => {
             {/* Section 3: Spotlight Releases */}
             {comingSoon.length > 0 && !search && selectedGenre === 'All' && (
               <div>
-                <div style={{ marginBottom: '20px' }}>
-                  <h2 style={{ fontSize: '24px', fontWeight: 700, margin: 0 }}>Latest Premieres</h2>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '14px', margin: '4px 0 0 0' }}>
-                    Freshly added releases ready for ticket reservations
+                <div style={{ marginBottom: '24px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <FiCalendar style={{ color: 'var(--accent-light)' }} size={22} />
+                    <h2 style={{ fontSize: '26px', fontWeight: 800, margin: 0 }}>
+                      Latest Premieres
+                    </h2>
+                  </div>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '14px', margin: '6px 0 0 0' }}>
+                    Freshly added releases ready for instant ticket reservations
                   </p>
                 </div>
 
                 <div
                   style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))',
-                    gap: '24px',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))',
+                    gap: '28px',
                   }}
                 >
                   {comingSoon.map((movie) => (
@@ -542,7 +691,7 @@ const Home = () => {
   );
 };
 
-// Reusable Movie Card Component
+// Reusable Rich Movie Card Component
 const MovieCard = ({ movie }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -554,10 +703,17 @@ const MovieCard = ({ movie }) => {
       style={{
         display: 'flex',
         flexDirection: 'column',
+        borderRadius: '18px',
         padding: '12px',
-        backgroundColor: 'var(--bg-surface)',
-        transform: isHovered ? 'translateY(-4px)' : 'none',
-        borderColor: isHovered ? 'var(--accent)' : 'var(--border-color)',
+        backgroundColor: 'rgba(21, 26, 40, 0.75)',
+        backdropFilter: 'blur(14px)',
+        WebkitBackdropFilter: 'blur(14px)',
+        border: `1px solid ${isHovered ? 'rgba(229, 9, 20, 0.45)' : 'rgba(255, 255, 255, 0.08)'}`,
+        transform: isHovered ? 'translateY(-8px)' : 'none',
+        boxShadow: isHovered
+          ? '0 24px 48px -10px rgba(0, 0, 0, 0.85), 0 0 24px rgba(229, 9, 20, 0.25)'
+          : '0 12px 28px -8px rgba(0, 0, 0, 0.6)',
+        transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
     >
       {/* 2:3 Poster Container */}
@@ -565,10 +721,10 @@ const MovieCard = ({ movie }) => {
         style={{
           position: 'relative',
           aspectRatio: '2 / 3',
-          borderRadius: '8px',
+          borderRadius: '12px',
           overflow: 'hidden',
-          backgroundColor: 'var(--bg-surface-alt)',
-          marginBottom: '12px',
+          backgroundColor: '#181E30',
+          marginBottom: '14px',
         }}
       >
         <img
@@ -578,8 +734,8 @@ const MovieCard = ({ movie }) => {
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            transform: isHovered ? 'scale(1.04)' : 'scale(1)',
-            transition: 'transform 0.2s ease',
+            transform: isHovered ? 'scale(1.08)' : 'scale(1)',
+            transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
           onError={(e) => {
             e.target.onerror = null;
@@ -587,26 +743,55 @@ const MovieCard = ({ movie }) => {
           }}
         />
 
-        {/* Rating Badge */}
+        {/* Poster Top Badges */}
         <div
           style={{
             position: 'absolute',
-            top: '8px',
-            right: '8px',
-            backgroundColor: 'var(--bg-surface)',
-            border: '1px solid var(--border-color)',
-            color: 'var(--text-primary)',
-            padding: '3px 8px',
-            borderRadius: '6px',
-            fontSize: '12px',
-            fontWeight: 700,
+            top: '10px',
+            left: '10px',
+            right: '10px',
             display: 'flex',
+            justifyContent: 'space-between',
             alignItems: 'center',
-            gap: '4px',
+            pointerEvents: 'none',
           }}
         >
-          <FiStar size={12} style={{ color: 'var(--accent)' }} />
-          <span>{movie.rating.toFixed(1)}</span>
+          <span
+            style={{
+              backgroundColor: 'rgba(11, 13, 20, 0.75)',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              color: '#FFFFFF',
+              padding: '3px 8px',
+              borderRadius: '6px',
+              fontSize: '11px',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+            }}
+          >
+            {movie.language || 'Cinema'}
+          </span>
+
+          {/* Rating Badge */}
+          <div
+            style={{
+              backgroundColor: 'rgba(11, 13, 20, 0.85)',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255, 184, 0, 0.4)',
+              color: '#FCD34D',
+              padding: '3px 9px',
+              borderRadius: '100px',
+              fontSize: '12px',
+              fontWeight: 800,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
+            }}
+          >
+            <FiStar size={12} style={{ fill: '#FCD34D' }} />
+            <span>{movie.rating.toFixed(1)}</span>
+          </div>
         </div>
 
         {/* Hover Book Overlay Button */}
@@ -615,61 +800,96 @@ const MovieCard = ({ movie }) => {
             style={{
               position: 'absolute',
               inset: 0,
-              backgroundColor: 'rgba(15, 15, 20, 0.7)',
+              background: 'linear-gradient(to top, rgba(11, 13, 20, 0.9) 0%, rgba(11, 13, 20, 0.4) 60%)',
               display: 'flex',
-              alignItems: 'center',
+              alignItems: 'flex-end',
               justifyContent: 'center',
               padding: '16px',
-              animation: 'fadeIn 0.2s ease',
+              animation: 'fadeIn 0.25s ease',
             }}
           >
             <Link to={`/movies/${movie._id}`} style={{ width: '100%' }}>
-              <Button variant="primary" style={{ width: '100%' }} icon={<FiFilm />}>
-                Book Now
+              <Button
+                variant="primary"
+                style={{
+                  width: '100%',
+                  borderRadius: '10px',
+                  padding: '11px',
+                  fontSize: '13.5px',
+                  boxShadow: '0 8px 24px rgba(229, 9, 20, 0.5)',
+                }}
+                icon={<FiFilm size={15} />}
+              >
+                Book Tickets
               </Button>
             </Link>
           </div>
         )}
       </div>
 
-      {/* Movie Details */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <h3
-          style={{
-            fontSize: '16px',
-            fontWeight: 700,
-            margin: '0 0 4px 0',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}
-          title={movie.title}
-        >
-          {movie.title}
-        </h3>
+      {/* Details Footer */}
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
+        <div>
+          <h3
+            style={{
+              fontSize: '16px',
+              fontWeight: 700,
+              marginBottom: '6px',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              color: isHovered ? 'var(--accent-light)' : '#FFFFFF',
+              transition: 'color 0.2s ease',
+            }}
+          >
+            {movie.title}
+          </h3>
 
-        <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
-          {movie.language} &bull; {Math.floor(movie.duration / 60)}h {movie.duration % 60}m
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              marginBottom: '10px',
+              fontSize: '12.5px',
+              color: 'var(--text-secondary)',
+            }}
+          >
+            <span>{Math.floor(movie.duration / 60)}h {movie.duration % 60}m</span>
+            <span>&bull;</span>
+            <span>{new Date(movie.releaseDate).getFullYear()}</span>
+          </div>
         </div>
 
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
           {movie.genre.slice(0, 2).map((g) => (
-            <Badge key={g} variant="neutral" style={{ fontSize: '11px', padding: '2px 8px' }}>
+            <span
+              key={g}
+              style={{
+                fontSize: '11px',
+                fontWeight: 600,
+                color: 'var(--text-secondary)',
+                background: 'rgba(255, 255, 255, 0.05)',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                border: '1px solid rgba(255, 255, 255, 0.06)',
+              }}
+            >
               {g}
-            </Badge>
+            </span>
           ))}
           {movie.genre.length > 2 && (
-            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', alignSelf: 'center' }}>
+            <span
+              style={{
+                fontSize: '10.5px',
+                color: 'var(--text-tertiary)',
+                alignSelf: 'center',
+              }}
+            >
               +{movie.genre.length - 2}
             </span>
           )}
         </div>
-
-        <Link to={`/movies/${movie._id}`} style={{ marginTop: 'auto' }}>
-          <Button variant="secondary" size="sm" style={{ width: '100%' }}>
-            Select Seats
-          </Button>
-        </Link>
       </div>
     </div>
   );

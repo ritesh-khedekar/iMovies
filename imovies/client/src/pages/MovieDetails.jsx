@@ -218,19 +218,33 @@ const MovieDetails = () => {
       </div>
 
       {/* ================= MOVIE HERO BANNER ================= */}
-      <Card
+      <div
         style={{
-          padding: '32px',
-          marginBottom: '40px',
-          backgroundColor: 'var(--bg-surface)',
-          border: '1px solid var(--border-color)',
-          borderRadius: '12px',
+          padding: '36px',
+          marginBottom: '44px',
+          backgroundColor: 'rgba(19, 24, 38, 0.85)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: '24px',
+          boxShadow: '0 24px 60px -15px rgba(0, 0, 0, 0.75)',
         }}
       >
         <div className="row g-4 align-items-center">
           {/* Movie Poster */}
           <div className="col-md-4 col-lg-3 text-center text-md-start">
-            <div style={{ position: 'relative', display: 'inline-block', width: '100%', maxWidth: '260px' }}>
+            <div
+              style={{
+                position: 'relative',
+                display: 'inline-block',
+                width: '100%',
+                maxWidth: '260px',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                boxShadow: '0 16px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(229, 9, 20, 0.2)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+              }}
+            >
               <img
                 src={movie.posterUrl}
                 alt={movie.title}
@@ -238,8 +252,6 @@ const MovieDetails = () => {
                   width: '100%',
                   aspectRatio: '2/3',
                   objectFit: 'cover',
-                  borderRadius: '12px',
-                  border: '1px solid var(--border-color)',
                   display: 'block',
                 }}
                 onError={(e) => {
@@ -254,7 +266,7 @@ const MovieDetails = () => {
                   left: '12px',
                 }}
               >
-                <Badge variant="accent" style={{ fontWeight: 600 }}>
+                <Badge variant="accent" style={{ fontWeight: 700, borderRadius: '8px' }}>
                   IN THEATRES
                 </Badge>
               </div>
@@ -264,38 +276,72 @@ const MovieDetails = () => {
           {/* Movie Details */}
           <div className="col-md-8 col-lg-9">
             {/* Metadata Pills */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-              <Badge variant="neutral" icon={<FiStar style={{ color: 'var(--accent)', marginRight: '4px' }} />}>
-                {movie.rating ? movie.rating.toFixed(1) : '8.0'} / 10
-              </Badge>
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  padding: '4px 10px',
+                  borderRadius: '100px',
+                  background: 'rgba(255, 184, 0, 0.15)',
+                  border: '1px solid rgba(255, 184, 0, 0.4)',
+                  color: '#FCD34D',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                }}
+              >
+                <FiStar size={13} style={{ fill: '#FCD34D' }} />
+                <span>{movie.rating ? movie.rating.toFixed(1) : '8.0'} / 10</span>
+              </div>
               <Badge variant="neutral" icon={<FiGlobe style={{ marginRight: '4px' }} />}>
                 {movie.language}
               </Badge>
               <Badge variant="neutral" icon={<FiClock style={{ marginRight: '4px' }} />}>
                 {Math.floor(movie.duration / 60)}h {movie.duration % 60}m
               </Badge>
-              <span style={{ fontSize: '13px', color: 'var(--text-secondary)', marginLeft: '4px' }}>
+              <span style={{ fontSize: '13px', color: 'var(--text-tertiary)', marginLeft: '4px' }}>
                 Released: {new Date(movie.releaseDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
               </span>
             </div>
 
-            <h1 style={{ fontSize: '32px', fontWeight: 700, margin: '0 0 16px 0', lineHeight: 1.2 }}>
+            <h1
+              style={{
+                fontSize: '38px',
+                fontWeight: 900,
+                margin: '0 0 16px 0',
+                lineHeight: 1.15,
+                letterSpacing: '-0.025em',
+                fontFamily: "'Outfit', sans-serif",
+              }}
+            >
               {movie.title}
             </h1>
 
             {/* Genre Chips */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '22px' }}>
               {Array.isArray(movie.genre) &&
                 movie.genre.map((g) => (
-                  <Badge key={g} variant="neutral" style={{ backgroundColor: 'var(--bg-surface-alt)' }}>
+                  <span
+                    key={g}
+                    style={{
+                      padding: '4px 12px',
+                      borderRadius: '8px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      background: 'rgba(255, 255, 255, 0.06)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      color: 'var(--text-secondary)',
+                    }}
+                  >
                     {g}
-                  </Badge>
+                  </span>
                 ))}
             </div>
 
             {/* Expandable Description */}
-            <div style={{ marginBottom: '24px', maxWidth: '780px' }}>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, margin: 0 }}>
+            <div style={{ marginBottom: '28px', maxWidth: '800px' }}>
+              <p style={{ color: '#CBD5E1', fontSize: '15.5px', lineHeight: 1.7, margin: 0 }}>
                 {displayDescription}
               </p>
               {isDescLong && (
@@ -305,10 +351,10 @@ const MovieDetails = () => {
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: 'var(--accent)',
+                    color: 'var(--accent-light)',
                     fontSize: '14px',
-                    fontWeight: 600,
-                    padding: '6px 0 0 0',
+                    fontWeight: 700,
+                    padding: '8px 0 0 0',
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -322,13 +368,14 @@ const MovieDetails = () => {
             </div>
 
             {/* Action Buttons */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', alignItems: 'center' }}>
               {movie.trailerUrl && (
                 <Button
                   variant="outline"
                   size="md"
                   icon={<FiPlay size={16} />}
                   onClick={() => setShowTrailerModal(true)}
+                  style={{ borderRadius: '12px', padding: '12px 22px' }}
                 >
                   Watch Trailer
                 </Button>
@@ -341,6 +388,7 @@ const MovieDetails = () => {
                   variant="primary"
                   size="md"
                   icon={<FiCalendar size={16} />}
+                  style={{ borderRadius: '12px', padding: '12px 24px' }}
                 >
                   Book Tickets
                 </Button>
@@ -348,7 +396,7 @@ const MovieDetails = () => {
             </div>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* ================= 7-DAY DATE SELECTOR ================= */}
       <section id="showtimes-section" style={{ marginBottom: '32px' }}>
@@ -380,36 +428,38 @@ const MovieDetails = () => {
                 type="button"
                 onClick={() => setSelectedDate(item.dateStr)}
                 style={{
-                  minWidth: '96px',
-                  padding: '12px 14px',
-                  borderRadius: '10px',
-                  border: isSelected ? '1px solid var(--accent)' : '1px solid var(--border-color)',
-                  backgroundColor: isSelected ? 'var(--accent)' : 'var(--bg-surface)',
-                  color: 'var(--text-primary)',
+                  minWidth: '100px',
+                  padding: '14px 16px',
+                  borderRadius: '14px',
+                  border: isSelected ? '1px solid transparent' : '1px solid rgba(255, 255, 255, 0.08)',
+                  background: isSelected ? 'var(--accent-gradient)' : 'rgba(23, 29, 46, 0.7)',
+                  color: '#FFFFFF',
+                  boxShadow: isSelected ? 'var(--accent-glow)' : '0 4px 12px rgba(0, 0, 0, 0.25)',
                   cursor: 'pointer',
                   textAlign: 'center',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                   flexShrink: 0,
+                  transform: isSelected ? 'scale(1.04)' : 'none',
                 }}
               >
                 <div
                   style={{
                     fontSize: '11px',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     textTransform: 'uppercase',
-                    color: isSelected ? 'rgba(255, 255, 255, 0.9)' : 'var(--text-secondary)',
-                    letterSpacing: '0.5px',
+                    color: isSelected ? '#FFFFFF' : 'var(--text-tertiary)',
+                    letterSpacing: '0.08em',
                   }}
                 >
                   {item.dayName}
                 </div>
-                <div style={{ fontSize: '22px', fontWeight: 700, margin: '2px 0' }}>
+                <div style={{ fontSize: '24px', fontWeight: 800, margin: '3px 0', fontFamily: "'Outfit', sans-serif" }}>
                   {item.dayNumber}
                 </div>
                 <div
                   style={{
-                    fontSize: '12px',
-                    fontWeight: 500,
+                    fontSize: '11.5px',
+                    fontWeight: 600,
                     color: isSelected ? 'rgba(255, 255, 255, 0.9)' : 'var(--text-secondary)',
                     textTransform: 'uppercase',
                   }}

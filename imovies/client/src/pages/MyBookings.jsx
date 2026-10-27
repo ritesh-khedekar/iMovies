@@ -136,7 +136,7 @@ const MyBookings = () => {
       />
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '28px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '32px', flexWrap: 'wrap' }}>
         <button
           type="button"
           onClick={() => setActiveTab('upcoming')}
@@ -144,25 +144,26 @@ const MyBookings = () => {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '8px',
-            padding: '8px 16px',
-            borderRadius: '20px',
-            border: activeTab === 'upcoming' ? '1px solid var(--accent)' : '1px solid var(--border-color)',
-            backgroundColor: activeTab === 'upcoming' ? 'var(--accent)' : 'var(--bg-surface)',
-            color: activeTab === 'upcoming' ? 'var(--text-primary)' : 'var(--text-secondary)',
-            fontWeight: 600,
-            fontSize: '14px',
+            padding: '9px 18px',
+            borderRadius: '100px',
+            border: activeTab === 'upcoming' ? '1px solid transparent' : '1px solid rgba(255, 255, 255, 0.08)',
+            background: activeTab === 'upcoming' ? 'var(--accent-gradient)' : 'rgba(23, 29, 46, 0.6)',
+            color: '#FFFFFF',
+            fontWeight: 700,
+            fontSize: '13.5px',
             cursor: 'pointer',
-            transition: 'all 0.2s ease',
+            transition: 'all 0.25s ease',
+            boxShadow: activeTab === 'upcoming' ? 'var(--accent-glow)' : 'none',
           }}
         >
           <span>Upcoming Shows</span>
           <span
             style={{
-              fontSize: '12px',
+              fontSize: '11px',
               padding: '2px 8px',
-              borderRadius: '10px',
-              backgroundColor: activeTab === 'upcoming' ? 'rgba(0,0,0,0.25)' : 'var(--bg-surface-alt)',
-              color: activeTab === 'upcoming' ? 'var(--text-primary)' : 'var(--text-primary)',
+              borderRadius: '100px',
+              backgroundColor: activeTab === 'upcoming' ? 'rgba(0,0,0,0.3)' : 'rgba(255, 255, 255, 0.1)',
+              color: '#FFFFFF',
             }}
           >
             {upcomingBookings.length}
@@ -176,25 +177,26 @@ const MyBookings = () => {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '8px',
-            padding: '8px 16px',
-            borderRadius: '20px',
-            border: activeTab === 'past' ? '1px solid var(--accent)' : '1px solid var(--border-color)',
-            backgroundColor: activeTab === 'past' ? 'var(--accent)' : 'var(--bg-surface)',
-            color: activeTab === 'past' ? 'var(--text-primary)' : 'var(--text-secondary)',
-            fontWeight: 600,
-            fontSize: '14px',
+            padding: '9px 18px',
+            borderRadius: '100px',
+            border: activeTab === 'past' ? '1px solid transparent' : '1px solid rgba(255, 255, 255, 0.08)',
+            background: activeTab === 'past' ? 'var(--accent-gradient)' : 'rgba(23, 29, 46, 0.6)',
+            color: '#FFFFFF',
+            fontWeight: 700,
+            fontSize: '13.5px',
             cursor: 'pointer',
-            transition: 'all 0.2s ease',
+            transition: 'all 0.25s ease',
+            boxShadow: activeTab === 'past' ? 'var(--accent-glow)' : 'none',
           }}
         >
           <span>Past Shows</span>
           <span
             style={{
-              fontSize: '12px',
+              fontSize: '11px',
               padding: '2px 8px',
-              borderRadius: '10px',
-              backgroundColor: activeTab === 'past' ? 'rgba(0,0,0,0.25)' : 'var(--bg-surface-alt)',
-              color: activeTab === 'past' ? 'var(--text-primary)' : 'var(--text-primary)',
+              borderRadius: '100px',
+              backgroundColor: activeTab === 'past' ? 'rgba(0,0,0,0.3)' : 'rgba(255, 255, 255, 0.1)',
+              color: '#FFFFFF',
             }}
           >
             {pastBookings.length}
@@ -208,25 +210,26 @@ const MyBookings = () => {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '8px',
-            padding: '8px 16px',
-            borderRadius: '20px',
-            border: activeTab === 'cancelled' ? '1px solid var(--accent)' : '1px solid var(--border-color)',
-            backgroundColor: activeTab === 'cancelled' ? 'var(--accent)' : 'var(--bg-surface)',
-            color: activeTab === 'cancelled' ? 'var(--text-primary)' : 'var(--text-secondary)',
-            fontWeight: 600,
-            fontSize: '14px',
+            padding: '9px 18px',
+            borderRadius: '100px',
+            border: activeTab === 'cancelled' ? '1px solid transparent' : '1px solid rgba(255, 255, 255, 0.08)',
+            background: activeTab === 'cancelled' ? 'var(--accent-gradient)' : 'rgba(23, 29, 46, 0.6)',
+            color: '#FFFFFF',
+            fontWeight: 700,
+            fontSize: '13.5px',
             cursor: 'pointer',
-            transition: 'all 0.2s ease',
+            transition: 'all 0.25s ease',
+            boxShadow: activeTab === 'cancelled' ? 'var(--accent-glow)' : 'none',
           }}
         >
           <span>Cancelled</span>
           <span
             style={{
-              fontSize: '12px',
+              fontSize: '11px',
               padding: '2px 8px',
-              borderRadius: '10px',
-              backgroundColor: activeTab === 'cancelled' ? 'rgba(0,0,0,0.25)' : 'var(--bg-surface-alt)',
-              color: activeTab === 'cancelled' ? 'var(--text-primary)' : 'var(--text-primary)',
+              borderRadius: '100px',
+              backgroundColor: activeTab === 'cancelled' ? 'rgba(0,0,0,0.3)' : 'rgba(255, 255, 255, 0.1)',
+              color: '#FFFFFF',
             }}
           >
             {cancelledBookings.length}

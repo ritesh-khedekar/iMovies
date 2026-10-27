@@ -246,13 +246,16 @@ const SeatSelection = () => {
       <div className="row g-4">
         {/* ================= LEFT: SEAT MATRIX ================= */}
         <div className="col-lg-8">
-          <Card
+          <div
             style={{
-              padding: '32px 24px',
-              backgroundColor: 'var(--bg-surface)',
-              border: '1px solid var(--border-color)',
-              borderRadius: '12px',
+              padding: '36px 24px',
+              backgroundColor: 'rgba(19, 24, 38, 0.85)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '24px',
               textAlign: 'center',
+              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7)',
             }}
           >
             {/* Theatrical Curved Screen */}
@@ -267,9 +270,9 @@ const SeatSelection = () => {
                 justifyContent: 'center',
                 flexWrap: 'wrap',
                 gap: '24px',
-                marginBottom: '28px',
+                marginBottom: '32px',
                 paddingBottom: '20px',
-                borderBottom: '1px solid var(--border-color)',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                 fontSize: '13px',
               }}
             >
@@ -501,23 +504,26 @@ const SeatSelection = () => {
               <FiShield size={15} style={{ color: 'var(--accent)' }} />
               <span>Select up to 8 seats per booking transaction. Click any selected seat to deselect.</span>
             </div>
-          </Card>
+          </div>
         </div>
 
         {/* ================= RIGHT: STICKY BOOKING SUMMARY ================= */}
         <div className="col-lg-4">
-          <Card
+          <div
             style={{
-              padding: '24px',
-              backgroundColor: 'var(--bg-surface)',
-              border: '1px solid var(--border-color)',
-              borderRadius: '12px',
+              padding: '28px',
+              backgroundColor: 'rgba(19, 24, 38, 0.85)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '24px',
+              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7)',
               position: 'sticky',
-              top: '88px',
+              top: '96px',
             }}
           >
-            <h2 style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 16px 0', paddingBottom: '12px', borderBottom: '1px solid var(--border-color)' }}>
-              Booking Summary
+            <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 18px 0', paddingBottom: '14px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', fontFamily: "'Outfit', sans-serif" }}>
+              VIP Pass Summary
             </h2>
 
             {/* Movie preview snippet */}
@@ -700,7 +706,7 @@ const SeatSelection = () => {
               <FiShield size={13} style={{ color: 'var(--success)' }} />
               <span>Atomic race-condition safety guaranteed</span>
             </div>
-          </Card>
+          </div>
         </div>
       </div>
 
