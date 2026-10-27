@@ -1,0 +1,426 @@
+:root {
+  --bg-main: #0F0F14;
+  --bg-surface: #1A1A23;
+  --bg-surface-alt: #242430;
+  --border-color: #2E2E3A;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A6A6B3;
+  --accent: #E50914;
+  --accent-dark: #B20710;
+  --success: #2ECC71;
+  --danger: #E74C3C;
+  --seat-available: #3A3A48;
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Typography Hierarchy */
+h1, .h1 {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+h2, .h2 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+h3, .h3 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-primary);
+}
+
+h4, .h4 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+p, span, div, label {
+  color: inherit;
+}
+
+small, .text-small {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+.text-xs {
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Links */
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+/* Focus outline for accessibility */
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-surface-alt);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--seat-available);
+}
+
+/* Cards */
+.ui-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.ui-card-hover:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+}
+
+/* Form Controls */
+.ui-input {
+  width: 100%;
+  background-color: var(--bg-surface-alt);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 15px;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.ui-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.ui-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.ui-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Buttons Base */
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.ui-btn:active {
+  transform: translateY(1px);
+}
+
+.ui-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ui-btn-primary {
+  background-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.ui-btn-primary:hover:not(:disabled) {
+  background-color: var(--accent-dark);
+  color: var(--text-primary);
+}
+
+.ui-btn-secondary {
+  background-color: var(--bg-surface-alt);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.ui-btn-secondary:hover:not(:disabled) {
+  background-color: var(--seat-available);
+}
+
+.ui-btn-outline {
+  background-color: transparent;
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.ui-btn-outline:hover:not(:disabled) {
+  background-color: var(--bg-surface-alt);
+  border-color: var(--text-secondary);
+}
+
+.ui-btn-danger {
+  background-color: var(--danger);
+  color: var(--text-primary);
+}
+
+.ui-btn-danger:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.ui-btn-sm {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 6px;
+}
+
+.ui-btn-lg {
+  padding: 14px 24px;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+/* Badges */
+.ui-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 100px;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ui-badge-accent {
+  background-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.ui-badge-success {
+  background-color: var(--bg-surface-alt);
+  color: var(--success);
+  border-color: var(--success);
+}
+
+.ui-badge-danger {
+  background-color: var(--bg-surface-alt);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.ui-badge-neutral {
+  background-color: var(--bg-surface-alt);
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+}
+
+/* Modals */
+.ui-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 15, 20, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
+
+.ui-modal {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Skeleton Loading */
+.ui-skeleton {
+  background-color: var(--bg-surface-alt);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ui-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--seat-available);
+  opacity: 0.3;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.5; }
+}
+
+/* Screen Curve */
+.ui-screen-curve {
+  width: 85%;
+  height: 36px;
+  border-top: 3px solid var(--accent);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  margin: 0 auto 24px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  text-transform: uppercase;
+  background-color: var(--bg-surface-alt);
+}
+
+/* Seats */
+.ui-seat {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  user-select: none;
+}
+
+.ui-seat-available {
+  background-color: var(--seat-available);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.ui-seat-available:hover {
+  background-color: var(--bg-surface-alt);
+  border-color: var(--text-secondary);
+  transform: scale(1.1);
+}
+
+.ui-seat-selected {
+  background-color: var(--success);
+  color: var(--bg-main);
+  font-weight: 700;
+  transform: scale(1.05);
+}
+
+.ui-seat-booked {
+  background-color: var(--bg-surface-alt);
+  color: var(--text-secondary);
+  opacity: 0.4;
+  border-color: var(--border-color);
+  cursor: not-allowed;
+}
+
+/* Ticket Notches */
+.ui-ticket {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ui-ticket-dashed {
+  border-top: 1px dashed var(--border-color);
+  margin: 16px 0;
+  position: relative;
+}
+
+.ui-ticket-notch-left, .ui-ticket-notch-right {
+  position: absolute;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  background-color: var(--bg-main);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  border: 1px solid var(--border-color);
+}
+.ui-ticket-notch-left { left: -11px; }
+.ui-ticket-notch-right { right: -11px; }
