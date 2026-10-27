@@ -41,11 +41,23 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// Mount API routes
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/movies', require('./routes/movieRoutes'));
-app.use('/api/shows', require('./routes/showRoutes'));
-app.use('/api/bookings', require('./routes/bookingRoutes'));
+// Mount API routes (Support both with and without /api prefix for complete resilience)
+const authRoutes = require('./routes/authRoutes');
+const movieRoutes = require('./routes/movieRoutes');
+const showRoutes = require('./routes/showRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
+
+app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
+
+app.use('/api/movies', movieRoutes);
+app.use('/movies', movieRoutes);
+
+app.use('/api/shows', showRoutes);
+app.use('/shows', showRoutes);
+
+app.use('/api/bookings', bookingRoutes);
+app.use('/bookings', bookingRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

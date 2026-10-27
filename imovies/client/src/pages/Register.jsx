@@ -53,11 +53,16 @@ const Register = () => {
 
     try {
       setSubmitting(true);
-      const user = await register(name, email, password);
+      const user = await register(name.trim(), email.trim(), password);
       success(`Welcome to IMovies, ${user.name}`);
       navigate('/');
     } catch (err) {
-      const msg = err.response?.data?.message || 'Registration failed. Please try again.';
+      let msg = 'Registration failed. Please try again.';
+      if (!err.response) {
+        msg = 'Cannot connect to backend server. Please verify the server is running on http://localhost:5000.';
+      } else if (err.response.data?.message) {
+        msg = err.response.data.message;
+      }
       setFormError(msg);
       toastError(msg);
     } finally {
