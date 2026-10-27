@@ -32,9 +32,17 @@ const seedData = async (exitOnComplete = true) => {
       role: 'user',
     });
 
+    const userMovies = await User.create({
+      name: 'Demo Movie User',
+      email: 'user@movies.com',
+      password: 'user123',
+      role: 'user',
+    });
+
     console.log('Users created:');
     console.log(`- Admin: ${admin.email} (password: admin123)`);
     console.log(`- User: ${user.email} (password: user123)`);
+    console.log(`- User (Alias): ${userMovies.email} (password: user123)`);
 
     console.log('Creating sample movies...');
     const sampleMovies = [

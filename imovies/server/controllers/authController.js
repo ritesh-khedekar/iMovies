@@ -21,7 +21,9 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    const existingUser = await User.findOne({ email });
+    const cleanEmail = email.toLowerCase().trim();
+
+    const existingUser = await User.findOne({ email: cleanEmail });
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -30,8 +32,8 @@ exports.register = async (req, res, next) => {
     }
 
     const user = await User.create({
-      name,
-      email,
+      name: name.trim(),
+      email: cleanEmail,
       password,
     });
 
@@ -67,7 +69,8 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    const user = await User.findOne({ email }).select('+password');
+    const cleanEmail = email.toLowerCase().trim();
+    const user = await User.findOne({ email: cleanEmail }).select('+password');
     if (!user) {
       return res.status(401).json({
         success: false,

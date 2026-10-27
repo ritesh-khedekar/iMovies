@@ -38,8 +38,8 @@ const connectDB = async () => {
         },
       });
 
-      const memoryUri = mongoMemoryServer.getUri();
-      const conn = await mongoose.connect(memoryUri);
+      const memoryUri = mongoMemoryServer.getUri().replace(/\/$/, '') + '/imovies';
+      const conn = await mongoose.connect(memoryUri, { dbName: 'imovies' });
       console.log(`Local MongoDB Started and Connected: ${memoryUri}`);
       return conn;
     } catch (memErr) {
@@ -55,8 +55,8 @@ const connectDB = async () => {
             version: '7.0.14',
           },
         });
-        const memoryUri = mongoMemoryServer.getUri();
-        const conn = await mongoose.connect(memoryUri);
+        const memoryUri = mongoMemoryServer.getUri().replace(/\/$/, '') + '/imovies';
+        const conn = await mongoose.connect(memoryUri, { dbName: 'imovies' });
         console.log(`Embedded MongoDB Connected: ${memoryUri}`);
         return conn;
       } catch (fatalErr) {
