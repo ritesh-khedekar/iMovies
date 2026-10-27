@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import API from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { FiMail, FiLock, FiFilm, FiShield, FiClock, FiCheck } from 'react-icons/fi';
@@ -30,11 +31,16 @@ const Login = () => {
 
     try {
       setSubmitting(true);
-      const user = await login(email, password);
+      const user = await login(email.trim(), password);
       success(`Welcome back, ${user.name}`);
       navigate(from, { replace: true });
     } catch (err) {
-      const msg = err.response?.data?.message || 'Login failed. Please check your credentials.';
+      let msg = 'Login failed. Please check your credentials.';
+      if (!err.response) {
+        msg = `Cannot connect to backend API server at ${API.defaults.baseURL || 'http://localhost:5000/api'}. Please ensure the server is running.`;
+      } else if (err.response.data?.message) {
+        msg = err.response.data.message;
+      }
       setFormError(msg);
       toastError(msg);
     } finally {

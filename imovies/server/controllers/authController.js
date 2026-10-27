@@ -70,8 +70,10 @@ exports.login = async (req, res, next) => {
     }
 
     const cleanEmail = email.toLowerCase().trim();
+    console.log(`[AUTH] Login attempt for: "${cleanEmail}"`);
     const user = await User.findOne({ email: cleanEmail }).select('+password');
     if (!user) {
+      console.warn(`[AUTH] User not found in DB for: "${cleanEmail}"`);
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password',
@@ -80,11 +82,14 @@ exports.login = async (req, res, next) => {
 
     const isMatch = await user.matchPassword(password);
     if (!isMatch) {
+      console.warn(`[AUTH] Incorrect password for: "${cleanEmail}"`);
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password',
       });
     }
+
+    console.log(`[AUTH] Login SUCCESS: "${cleanEmail}" (Role: ${user.role})`);
 
     const token = generateToken(user._id);
 
