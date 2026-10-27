@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd imovies/client && npm install && npm run build",
+  "outputDirectory": "imovies/client/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

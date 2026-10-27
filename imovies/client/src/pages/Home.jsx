@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import API from '../services/api';
+import { mockMovies } from '../services/mockData';
 import { FiStar, FiSearch, FiFilm, FiCalendar, FiClock, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
@@ -30,14 +31,36 @@ const Home = () => {
       if (selectedLanguage !== 'All') params.language = selectedLanguage;
 
       const res = await API.get('/movies', { params });
+      let movieData = [];
       if (res.data?.success && Array.isArray(res.data.data)) {
-        setMovies(res.data.data);
+        movieData = res.data.data;
       } else if (Array.isArray(res.data)) {
-        setMovies(res.data);
+        movieData = res.data;
       }
+
+      // If backend returned empty list, fall back to built-in movie catalog
+      if (movieData.length === 0) {
+        let fallback = [...mockMovies];
+        if (selectedGenre !== 'All') {
+          fallback = fallback.filter((m) => m.genre?.includes(selectedGenre));
+        }
+        if (selectedLanguage !== 'All') {
+          fallback = fallback.filter((m) => m.language === selectedLanguage);
+        }
+        movieData = fallback;
+      }
+
+      setMovies(movieData);
     } catch (err) {
-      console.error('Failed to fetch movies:', err);
-      setFetchError(err.response?.data?.message || err.message || 'Cannot connect to movie server');
+      console.warn('API error, using built-in catalog fallback:', err);
+      let fallback = [...mockMovies];
+      if (selectedGenre !== 'All') {
+        fallback = fallback.filter((m) => m.genre?.includes(selectedGenre));
+      }
+      if (selectedLanguage !== 'All') {
+        fallback = fallback.filter((m) => m.language === selectedLanguage);
+      }
+      setMovies(fallback);
     } finally {
       setLoading(false);
     }

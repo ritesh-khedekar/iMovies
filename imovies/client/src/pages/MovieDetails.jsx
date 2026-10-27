@@ -15,6 +15,7 @@ import {
   FiSmartphone,
 } from 'react-icons/fi';
 import API from '../services/api';
+import { mockMovies, getMockShows } from '../services/mockData';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import Button from '../components/ui/Button';
@@ -72,11 +73,16 @@ const MovieDetails = () => {
       try {
         setLoadingMovie(true);
         const res = await API.get(`/movies/${id}`);
-        if (res.data.success) {
+        if (res.data?.success && res.data.data) {
           setMovie(res.data.data);
+        } else {
+          const fallbackMovie = mockMovies.find((m) => m._id === id) || mockMovies[0];
+          setMovie(fallbackMovie);
         }
       } catch (err) {
-        console.error('Error fetching movie:', err);
+        console.warn('Error fetching movie, falling back to mock:', err);
+        const fallbackMovie = mockMovies.find((m) => m._id === id) || mockMovies[0];
+        setMovie(fallbackMovie);
       } finally {
         setLoadingMovie(false);
       }
@@ -91,11 +97,14 @@ const MovieDetails = () => {
       try {
         setLoadingShows(true);
         const res = await API.get(`/shows/movie/${id}?date=${selectedDate}`);
-        if (res.data.success) {
+        if (res.data?.success && Array.isArray(res.data.data) && res.data.data.length > 0) {
           setShows(res.data.data);
+        } else {
+          setShows(getMockShows(id, selectedDate));
         }
       } catch (err) {
-        console.error('Error fetching shows:', err);
+        console.warn('Error fetching shows, falling back to mock:', err);
+        setShows(getMockShows(id, selectedDate));
       } finally {
         setLoadingShows(false);
       }

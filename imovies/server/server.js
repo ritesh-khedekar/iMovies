@@ -10,7 +10,30 @@ const errorHandler = require('./middleware/error');
 dotenv.config();
 
 // Connect to Database
-connectDB();
+const Movie = require('./models/Movie');
+const { seedData } = require('./seed');
+
+const autoSeedIfEmpty = async () => {
+  try {
+    const count = await Movie.countDocuments();
+    console.log(`[AutoSeed] Database movie count: ${count}`);
+    if (count === 0) {
+      console.log('[AutoSeed] Empty database detected. Automatically seeding demo movies, shows, and accounts...');
+      await seedData(false);
+      console.log('[AutoSeed] Automatic seeding completed successfully!');
+    }
+  } catch (err) {
+    console.error('[AutoSeed] Auto-seed error:', err.message);
+  }
+};
+
+connectDB()
+  .then(() => {
+    autoSeedIfEmpty();
+  })
+  .catch((err) => {
+    console.error('[DB] Connection error:', err.message);
+  });
 
 const app = express();
 
@@ -27,6 +50,12 @@ app.use(
 
 // Body parser
 app.use(express.json());
+
+// Request logging for debugging
+app.use((req, res, next) => {
+  console.log(`[REQ] ${req.method} ${req.originalUrl}`);
+  next();
+});
 
 // Rate limiting (Allow 1000 requests per 15 minutes window for smooth seat polling and navigation)
 const limiter = rateLimit({
@@ -66,6 +95,26 @@ app.get('/api/health', (req, res) => {
     message: 'IMovies API is running',
     timestamp: new Date().toISOString(),
   });
+});
+
+// Database Seed endpoint (accessible on deployed servers like Render to populate data anytime)
+app.all(['/api/seed', '/seed'], async (req, res) => {
+  try {
+    console.log('[API] Seeding requested via /api/seed...');
+    await seedData(false);
+    const movieCount = await Movie.countDocuments();
+    res.json({
+      success: true,
+      message: 'Database successfully seeded with movies, shows, and demo users!',
+      movieCount,
+    });
+  } catch (err) {
+    console.error('[API] /api/seed error:', err.message);
+    res.status(500).json({
+      success: false,
+      message: 'Database seeding failed: ' + err.message,
+    });
+  }
 });
 
 // 404 handler for unknown routes

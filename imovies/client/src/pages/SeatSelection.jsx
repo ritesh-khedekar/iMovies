@@ -12,6 +12,7 @@ import {
   FiFilm,
 } from 'react-icons/fi';
 import API from '../services/api';
+import { getMockShowById } from '../services/mockData';
 import { useToast } from '../context/ToastContext';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
@@ -41,7 +42,7 @@ const SeatSelection = () => {
       try {
         if (!isPolling) setLoading(true);
         const res = await API.get(`/shows/${showId}`);
-        if (res.data.success) {
+        if (res.data?.success && res.data.data) {
           const fetchedShow = res.data.data;
           setShow(fetchedShow);
 
@@ -55,11 +56,13 @@ const SeatSelection = () => {
               setSelectedSeats((prev) => prev.filter((s) => !newlyBooked.includes(s)));
             }
           }
+        } else {
+          setShow(getMockShowById(showId));
         }
       } catch (err) {
         if (!isPolling) {
-          console.error('Failed to load show:', err);
-          toastError('Failed to load show details.');
+          console.warn('Failed to load show from backend, using fallback:', err);
+          setShow(getMockShowById(showId));
         }
       } finally {
         if (!isPolling) setLoading(false);

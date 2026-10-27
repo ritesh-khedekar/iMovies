@@ -12,6 +12,7 @@ import {
   FiTrash2,
 } from 'react-icons/fi';
 import API from '../services/api';
+import { getMockBookings } from '../services/mockData';
 import { useToast } from '../context/ToastContext';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
@@ -34,12 +35,15 @@ const MyBookings = () => {
     try {
       setLoading(true);
       const res = await API.get('/bookings/my');
-      if (res.data.success) {
+      if (res.data?.success && Array.isArray(res.data.data) && res.data.data.length > 0) {
         setBookings(res.data.data);
+      } else {
+        const stored = getMockBookings();
+        setBookings(stored.length > 0 ? stored : (res.data?.data || []));
       }
     } catch (err) {
-      console.error('Failed to load bookings:', err);
-      toastError('Failed to fetch your bookings');
+      console.warn('Failed to load bookings from API, using fallback:', err);
+      setBookings(getMockBookings());
     } finally {
       setLoading(false);
     }

@@ -1,0 +1,9 @@
+{
+  "name": "imovies-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "cd imovies/client && npm install && npm run build",
+    "start": "cd imovies/server && npm start"
+  }
+}

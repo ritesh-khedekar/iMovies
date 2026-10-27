@@ -12,6 +12,18 @@ export default defineConfig({
         target: 'http://localhost:5000',
         changeOrigin: true,
       },
+      '/movies': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+      '/shows': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+      '/bookings': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
       '/auth': {
         target: 'http://localhost:5000',
         changeOrigin: true,
