@@ -47,6 +47,18 @@ const seedData = async (exitOnComplete = true) => {
     console.log('Creating sample movies...');
     const sampleMovies = [
       {
+        title: 'Pahala Pyar',
+        description: 'A heartwarming romantic drama exploring the sweetness and emotions of first love, dreams, and overcoming life challenges.',
+        genre: ['Romance', 'Drama'],
+        language: 'Hindi',
+        duration: 145,
+        releaseDate: new Date('2024-02-14'),
+        rating: 8.6,
+        posterUrl: 'https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?w=600&auto=format&fit=crop&q=80',
+        trailerUrl: 'https://www.youtube.com/embed/YoHD9XEInc0',
+        isActive: true,
+      },
+      {
         title: 'Inception',
         description: 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.',
         genre: ['Sci-Fi', 'Action', 'Thriller'],

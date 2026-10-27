@@ -100,6 +100,7 @@ const Home = () => {
     'Action',
     'Sci-Fi',
     'Adventure',
+    'Romance',
     'Drama',
     'Crime',
     'Biography',
